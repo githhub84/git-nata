@@ -1,0 +1,4 @@
+A shell is a program that acts as an interface between a user and the kernel.
+It allows a user to give commands to the kernel and receive responses from it.
+Through a shell,we can execute programs and utilities on the kernel. 
+Hence, at its core, a shell is a program used to execute other programs on our system.
