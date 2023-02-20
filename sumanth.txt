@@ -1,0 +1,49 @@
+pipeline{
+    agent any
+    environment {
+        PATH = "$PATH:/opt/apache-maven-3.8.2/bin"
+    }
+    stages{
+       stage('GetCode'){
+            steps{
+                'https://github.com/githhub84/git-nata.git'
+            }
+         }        
+       stage('Build'){
+            steps{
+                sh 'mvn clean package'
+            }
+         }
+        stage('SonarQube analysis') {
+//    def scannerHome = tool 'SonarScanner 4.0';
+        steps{
+        withSonarQubeEnv('sonarqube') { 
+        // If you have configured more than one global server connection, you can specify its name
+//      sh "${scannerHome}/bin/sonar-scanner"
+        sh "mvn sonar:sonar"
+    }
+        }
+        }
+ 	stage{'uploaded jar to nexus'}{
+	 steps{
+	   script{
+                nexusArtifactUploader  artifacts: [
+		    [
+			artifactId: 'my-app',
+			classifier: '',
+			file: "target/my-app-1.jar",
+			type: 'jar'
+		    ]
+	        ],
+		credentialsId: 'new-nexus', 
+		groupId: 'com.mycompany.app',
+		nexusUrl: '3.108.235.80:8081', 
+		nexusVersion: 'nexus2', 
+		protocol: 'http', 
+		repository: 'vprofile-mavenhosted', 
+		version: '1'
+		}
+	     }
+	   }
+     }
+ }
