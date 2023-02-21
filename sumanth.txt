@@ -24,7 +24,7 @@ pipeline{
     }
         }
         }
- 	stage{'uploaded jar to nexus'}{
+ 	stage('uploaded jar to nexus'){
 	 steps{
 	   script{
                 nexusArtifactUploader  artifacts: [
